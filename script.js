@@ -34,52 +34,111 @@ function playRound(player,computer){
     }
 
 }
-//TESTING GAME FUNCTIONALITY
-// let computerSelection = getComputerChoice();
-// console.log(computerSelection);
-// console.log(playRound('rOCk', computerSelection));
 
-function game(){
-    let computerPts=0,playerPts=0,tie=0;
+//USER INTERFACE
+const buttons = document.querySelectorAll('.btn');
+let computerPts=0,playerPts=0,tie=0;
 
-    for (let i = 0; i < 5; i++){
+    for(let i =0; i<buttons.length;i++){
         
-        let computerSelection = getComputerChoice(),
-            playerSelection = prompt();
-        
-        let result = playRound(playerSelection,computerSelection);
+        //event listener
+        buttons[i].addEventListener('click', () =>{
+            let plyrCh = buttons[i].value;
+            let cmpCh=getComputerChoice();
+            
+            //check if value matches image
+            console.log(plyrCh);
+            console.log(cmpCh);
 
-        //points counter console.log of message per round
-        if(result.includes('Win')){
-            console.log('You chose '+playerSelection +' and Computer chose '+ computerSelection);
-            console.log(result);
-            playerPts++;
-            console.log('Computer: ' + computerPts + ' Player: '+ playerPts + ' Tie: ' +tie);
-        }else if(result.includes('Lose')){
-            console.log('You chose '+playerSelection +' and Computer chose '+ computerSelection);
-            console.log(result);
-            computerPts++;
-            console.log('Computer: ' + computerPts + ' Player: '+ playerPts + ' Tie: ' +tie);
-        }else{
-            console.log(result);
-            console.log('You chose '+playerSelection +' and Computer chose '+ computerSelection);
-            tie++;
-            console.log('Computer: ' + computerPts + ' Player: '+ playerPts + ' Tie: ' +tie);
-        }
-    }
-    //total points
-    console.log('FINAL SCORE');
-    console.log('Computer: ' + computerPts + ' Player: '+ playerPts + ' Tie: ' +tie);
-    //game ended message
+            //display player choice
+            if(plyrCh=='rock'){
+                const playerImage =document.createElement('img');
+                playerImage.src='rock.png';
+                document.body.appendChild(playerImage);
+            }else if(plyrCh=='paper'){
+                const playerImage =document.createElement('img');
+                playerImage.src='paper.png';
+                document.body.appendChild(playerImage);
+            }else{
+                const playerImage =document.createElement('img');
+                playerImage.src='scissors.png';
+                document.body.appendChild(playerImage);
+            }
+            //display computer choice
+            if(cmpCh=='rock'){
+                const computerImage =document.createElement('img');
+                computerImage.src='rock.png';
+                document.body.appendChild(computerImage);
+            }else if(cmpCh=='paper'){
+                const computerImage =document.createElement('img');
+                computerImage.src='paper.png';
+                document.body.appendChild(computerImage);
+            }else{
+                const computerImage =document.createElement('img');
+                computerImage.src='scissors.png';
+                document.body.appendChild(computerImage);
+            }
+            
+            
+            
+            let result = playRound(plyrCh,cmpCh);
+            
+            if(result.includes('Win')){
+                playerPts++;
+                console.log('C: ' + computerPts + ' P: '+playerPts +' T: '+tie);
+                updateScore('player');
+                if(computerPts==5||playerPts==5){
+                    endGame(computerPts,playerPts);
+                }
+            }else if(result.includes('Lose')){
+                computerPts++;
+                console.log('C: ' + computerPts + ' P: '+playerPts +' T: '+tie);
+                updateScore('computer');
+                if(computerPts==5||playerPts==5){
+                    endGame(computerPts,playerPts);
+                }
+            }else{
+                tie++;
+                console.log('C: ' + computerPts + ' P: '+playerPts +' T: '+tie);
+                updateScore('tie');
+                if(computerPts==5||playerPts==5){
+                    endGame(computerPts,playerPts);
+                }
+            }
+            
+            
+            
+        });//event listener
+    }//for loop
+
+
+
+function endGame(computerPts,playerPts){
+    const gameResult = document.querySelector('#result');
     if(computerPts>playerPts){
-        console.log('Better Luck Next Time');
+        gameResult.textContent = 'Computer Wins! Better Luck Next Time';
     }else if (computerPts<playerPts){
-        console.log('Congratulations! You Won against the computer');
+        gameResult.textContent = 'Congratulations! You Won against the computer';
     }else{
-        console.log('The Game is a Tie!');
+        gameResult.textContent = 'The Game is a Tie!';
     }
 }
 
-game();
+function updateScore(whoWon){
+    if(whoWon=='player'){
+        const playerScoreDOM = document.querySelector('#playerScore');
+        playerScoreDOM.textContent= 'You: ' + playerPts;
+    }
+    else if(whoWon=='computer'){
+        const computerScoreDOM = document.querySelector('#computerScore');
+        computerScoreDOM.textContent= 'Computer: ' + computerPts;
+    }else{
+        const tieScoreDOM = document.querySelector('#tieScore');
+        tieScoreDOM.textContent= 'Tie: ' + tie;
+    }
+    
+        
+}
+
 
 
